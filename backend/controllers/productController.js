@@ -19,7 +19,18 @@ export const createProduct = async (req, res) => {
 // Get all Products.............
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
+    // Implementing search and filter functionality
+    const { search, category } = req.query;
+    const filter = {};
+    if (search) {
+      filter.title = { $regex: search, $options: "i" };
+    }
+    if (category) {
+      filter.category = category;
+    }
+    // search amd filter yaha tkk
+
+    const products = await Product.find(filter).sort({ createdAt: -1 });
     res.status(200).json({
       message: "Products retrieved successfully",
       product: products,
