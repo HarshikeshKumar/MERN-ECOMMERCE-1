@@ -1,4 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
+import AddProduct from "./admin/AddProduct";
+import EditProduct from "./admin/EditProduct";
+import ProductList from "./admin/ProductList";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -10,6 +13,10 @@ const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <Signup /> },
   { path: "/product/:id", element: <ProductDetails /> },
+
+  { path: "/admin/products", element: <ProductList /> },
+  { path: "/admin/products/update/:id", element: <EditProduct /> },
+  { path: "/admin/products/add", element: <AddProduct /> },
 ]);
 
 export default function App() {
