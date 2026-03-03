@@ -67,7 +67,7 @@ export default function ProductList() {
             products.map((product) => (
               <tr key={product._id} className="text-center">
                 <td className="border p-2">{product.title}</td>
-                <td className="border p-2">${product.price}</td>
+                <td className="border p-2">₹{product.price}</td>
                 <td className="border p-2">{product.stock}</td>
                 <td className="border p-2">
                   <Link
