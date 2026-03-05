@@ -65,7 +65,7 @@ export const removeItem = async (req, res) => {
   }
 };
 
-// Update Item in cart...................
+// Update Quantity in cart...................
 export const updateQuantity = async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
