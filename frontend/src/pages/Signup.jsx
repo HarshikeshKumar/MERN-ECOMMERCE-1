@@ -1,7 +1,12 @@
+// ..................................
+
 import { useState } from "react";
+import { useNavigate, Link } from "react-router";
 import api from "../api/axios";
 
 export default function Signup() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -9,6 +14,7 @@ export default function Signup() {
   });
 
   const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({
@@ -19,19 +25,30 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setMsg("");
 
     try {
-      const response = await api.post("/auth/signup", form);
-      setMsg(response.data.message);
+      const res = await api.post("/auth/signup", form);
+
+      setMsg("Account created successfully 🎉 Redirecting to login...");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (err) {
-      setMsg(err.response?.data?.message || "An error occurred");
+      setMsg(err.response?.data?.message || "Signup failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
-        <h2 className="text-2xl font-bold mb-6 text-center">Create Account</h2>
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm">
+        <h2 className="text-2xl font-bold text-center mb-6">
+          Create Your Account
+        </h2>
 
         {msg && (
           <div className="mb-4 text-center text-sm text-blue-600 font-medium">
@@ -42,41 +59,132 @@ export default function Signup() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             name="name"
-            placeholder="Enter name"
+            placeholder="Full Name"
             value={form.name}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
 
           <input
             name="email"
             type="email"
-            placeholder="Enter email"
+            placeholder="Email Address"
             value={form.email}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
 
           <input
             name="password"
             type="password"
-            placeholder="Enter password"
+            placeholder="Password"
             value={form.password}
             onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+            disabled={loading}
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition"
           >
-            Sign Up
+            {loading ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
+
+        <p className="text-center text-sm text-gray-600 mt-4">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-600 hover:underline">
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );
 }
+
+// // import { useState } from "react";
+// import api from "../api/axios";
+
+// export default function Signup() {
+//   const [form, setForm] = useState({
+//     name: "",
+//     email: "",
+//     password: "",
+//   });
+
+//   const [msg, setMsg] = useState("");
+
+//   const handleChange = (e) => {
+//     setForm({
+//       ...form,
+//       [e.target.name]: e.target.value,
+//     });
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     try {
+//       const response = await api.post("/auth/signup", form);
+//       setMsg(response.data.message);
+//     } catch (err) {
+//       setMsg(err.response?.data?.message || "An error occurred");
+//     }
+//   };
+
+//   return (
+//     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+//       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
+//         <h2 className="text-2xl font-bold mb-6 text-center">Create Account</h2>
+
+//         {msg && (
+//           <div className="mb-4 text-center text-sm text-blue-600 font-medium">
+//             {msg}
+//           </div>
+//         )}
+
+//         <form onSubmit={handleSubmit} className="space-y-4">
+//           <input
+//             name="name"
+//             placeholder="Enter name"
+//             value={form.name}
+//             onChange={handleChange}
+//             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+//             required
+//           />
+
+//           <input
+//             name="email"
+//             type="email"
+//             placeholder="Enter email"
+//             value={form.email}
+//             onChange={handleChange}
+//             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+//             required
+//           />
+
+//           <input
+//             name="password"
+//             type="password"
+//             placeholder="Enter password"
+//             value={form.password}
+//             onChange={handleChange}
+//             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+//             required
+//           />
+
+//           <button
+//             type="submit"
+//             className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition-colors"
+//           >
+//             Sign Up
+//           </button>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// }

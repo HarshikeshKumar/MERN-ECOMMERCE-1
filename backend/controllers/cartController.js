@@ -67,38 +67,30 @@ export const removeItem = async (req, res) => {
 
 // Update Quantity in cart...................
 export const updateQuantity = async (req, res) => {
-  try {
-    const { userId, productId, quantity } = req.body;
+  const { userId, productId, quantity } = req.body;
 
-    const cart = await Cart.findOne({ userId });
+  try {
+    const cart = await Cart.findOne({ userId }).populate("items.productId");
 
     if (!cart) {
-      return res.status(404).json({
-        message: "Cart No Found",
-      });
+      return res.status(404).json({ message: "Cart not found" });
     }
 
-    const item = cart.items.find((i) => i.productId.toString() === productId);
+    const item = cart.items.find(
+      (i) => i.productId._id.toString() === productId,
+    );
 
     if (!item) {
-      return res.status(404).json({
-        message: "Item Not Found in Cart",
-      });
+      return res.status(404).json({ message: "Item not found" });
     }
 
     item.quantity = quantity;
-    res.json({
-      message: "Item Quantity Updated",
-      cart,
-    });
 
-    await item.save();
+    await cart.save();
+
+    res.json(cart);
   } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      message: "Server Error",
-      error,
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 
